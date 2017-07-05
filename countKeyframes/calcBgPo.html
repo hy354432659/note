@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+	<title>计算css3序列帧背景位置</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+
+		div {
+			margin: 20px;
+		}
+
+		button {
+			width: 50px; text-align: center;
+		}
+	</style>
+</head>
+<body>
+<div>单一图片宽度：<input type="text" id="fpsW" /></div>
+<div>单一图片高度：<input type="text" id="fpsH" /></div>
+<div>整体图片宽度：<input type="text" id="totW" /></div>
+<div>整体图片高度：<input type="text" id="totH" /></div>
+<div>序列图片总数：<input type="text" id="fpsS" /></div>
+<div><button id="btn">计算</button></div>
+<div id="result"></div>
+<script>
+
+var HyFn = (function(window, undefined){
+
+	var fpsW = 0,
+		fpsH = 0,
+		totW = 0,
+		totH = 0,
+		fpsS = 0,
+		html = '';
+
+	var btn = document.getElementById('btn'),
+		ofW = document.getElementById('fpsW'),
+		ofH = document.getElementById('fpsH'),
+		otW = document.getElementById('totW'),
+		otH = document.getElementById('totH'),
+		ofS = document.getElementById('fpsS'),
+		res = document.getElementById('result');
+
+	function calcs() {
+		res.innerHTML = '';
+		fpsW = Number(ofW.value);
+		fpsH = Number(ofH.value);
+		totW = Number(otW.value);
+		totH = Number(otH.value);
+		fpsS = Number(ofS.value);
+
+		var c = 0;
+		var offX = totW/fpsW;
+		var offY = totH/fpsH;
+		var offP = (100/(fpsS-1)).toFixed(2);
+
+		for(var i=0; i<offY; i++) {
+			for(var j=0; j<offX; j++) {
+				var tempX = j*fpsW==0 ? 0 : -j*fpsW;
+				var tempY = i*fpsH==0 ? 0 : -i*fpsH;
+
+				html += (c*offP).toFixed(2)+'% {background-position: '+tempX+'px '+tempY+'px;}<br/>';
+				
+				if(c<fpsS-1) {
+					c++;
+				} else {
+					break;
+				}
+			}
+		}
+		res.innerHTML = html;
+	}
+
+	return {
+		init: function(){
+			btn.addEventListener('click', function(){
+				calcs();
+			}, false);
+		}
+	}
+
+})(window);
+
+HyFn.init();
+
+</script>
+</body>
+</html>
